@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .icon-btn {
+    @apply hover:bg-gray-100 hover:animate-pulse p-2 rounded-full inline-flex items-center justify-center cursor-pointer;
+  }
+
+  .section {
+    @apply flex items-center p-3 cursor-pointer hover:bg-gray-100 md:min-w-[200px];
+  }
+
+  .input {
+    @apply w-full text-sm p-2 border-b outline-none border-[whitesmoke];
+  }
+
+  .btn {
+    @apply flex items-center justify-center space-x-2 px-2 py-2 rounded-md text-sm text-gray-500 border cursor-pointer w-[110px] hover:bg-gray-100;
+  }
+
+  .mails {
+    @apply flex items-center justify-between w-[110px] px-2 border rounded-full text-xs;
+  }
+}
