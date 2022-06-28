@@ -17,11 +17,17 @@ import {
 import BtnIcon from "./BtnIcon";
 import { useRouter } from "next/router";
 import { deleteMail } from "../util/functions";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
 
-const MailTop = ({ id, files }) => {
+const MailTop = ({ id, files, username }) => {
   const router = useRouter();
 
+  const [user] = useAuthState(auth);
+
   const onClickhandler = async () => {
+    if (user.displayName !== username) return;
+
     await deleteMail(id, files);
 
     router.push("/");

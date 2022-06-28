@@ -26,7 +26,7 @@ const Mail = ({ email, files, replies }) => {
         </title>
       </Head>
 
-      <MailTop id={email?.id} files={files} />
+      <MailTop id={email?.id} files={files} username={email?.username} />
 
       <MailBody
         avatarImg={email?.profilePic}

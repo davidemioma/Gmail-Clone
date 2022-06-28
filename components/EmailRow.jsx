@@ -10,10 +10,13 @@ import { useRouter } from "next/router";
 import Moment from "react-moment";
 import { deleteMail } from "../util/functions";
 import { collection, onSnapshot, query } from "@firebase/firestore";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const EmailRow = ({ id, username, subject, description, date }) => {
   const router = useRouter();
+
+  const [user] = useAuthState(auth);
 
   const [openTrash, setOpenTrash] = useState(false);
 
@@ -28,6 +31,8 @@ const EmailRow = ({ id, username, subject, description, date }) => {
   );
 
   const onDeleteMail = async () => {
+    if (user.displayName !== username) return;
+
     await deleteMail(id, files);
   };
 
