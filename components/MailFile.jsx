@@ -23,7 +23,7 @@ const MailFile = ({ file, name, size }) => {
         </div>
       </div>
 
-      <a href={file} target="_blank">
+      <a href={file} target="_blank" rel="noreferrer">
         <BtnIcon Icon={MdFileDownload} text="download" />
       </a>
     </div>
