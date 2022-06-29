@@ -38,22 +38,24 @@ const Mail = ({ email, files, replies }) => {
         date={email?.timestamp}
       />
 
-      <div className="py-2 px-6 sm:px-16 border-t border-[whitesmoke]">
-        <p className="text-sm text-black font-bold mb-4">
-          {files.length} Attachments
-        </p>
+      {files.length > 0 && (
+        <div className="py-2 px-6 sm:px-16 border-t border-[whitesmoke]">
+          <p className="text-sm text-black font-bold mb-4">
+            {files.length} Attachments
+          </p>
 
-        <div className="flex flex-col lg:flex-row lg:flex-wrap">
-          {files?.map((file) => (
-            <MailFile
-              key={file.id}
-              file={file.file}
-              name={file.name}
-              size={file.size}
-            />
-          ))}
+          <div className="flex flex-col lg:flex-row lg:flex-wrap">
+            {files?.map((file) => (
+              <MailFile
+                key={file.id}
+                file={file.file}
+                name={file.name}
+                size={file.size}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="border-t border-[whitesmoke]">
         {replies?.map((reply) => (
