@@ -16,22 +16,9 @@ import {
 } from "@heroicons/react/solid";
 import BtnIcon from "./BtnIcon";
 import { useRouter } from "next/router";
-import { deleteMail } from "../util/functions";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
 
-const MailTop = ({ id, files, username }) => {
+const MailTop = () => {
   const router = useRouter();
-
-  const [user] = useAuthState(auth);
-
-  const onClickhandler = async () => {
-    if (user.displayName !== username) return;
-
-    await deleteMail(id, files);
-
-    router.push("/");
-  };
 
   return (
     <div className="flex items-center justify-between  px-2 py-1 border-b border-[whitesmoke]">
@@ -47,7 +34,7 @@ const MailTop = ({ id, files, username }) => {
 
         <BtnIcon Icon={ExclamationCircleIcon} text="Report Spam" />
 
-        <BtnIcon Icon={TrashIcon} text="Delete" onClick={onClickhandler} />
+        <BtnIcon Icon={TrashIcon} text="Delete" />
 
         <div className="w-[1px] h-5 mx-2 bg-[whitesmoke]" />
 

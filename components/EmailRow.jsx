@@ -8,33 +8,11 @@ import {
 } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import Moment from "react-moment";
-import { deleteMail } from "../util/functions";
-import { collection, onSnapshot, query } from "@firebase/firestore";
-import { db, auth } from "../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const EmailRow = ({ id, username, subject, description, date }) => {
   const router = useRouter();
 
-  const [user] = useAuthState(auth);
-
   const [openTrash, setOpenTrash] = useState(false);
-
-  const [files, setFiles] = useState([]);
-
-  useEffect(
-    () =>
-      onSnapshot(query(collection(db, "emails", id, "files")), (snapshot) =>
-        setFiles(snapshot.docs)
-      ),
-    [db]
-  );
-
-  const onDeleteMail = async () => {
-    if (user.displayName !== username) return;
-
-    await deleteMail(id, files);
-  };
 
   return (
     <div
@@ -93,7 +71,7 @@ const EmailRow = ({ id, username, subject, description, date }) => {
       </div>
 
       {openTrash && (
-        <div className="icon-btn" onClick={onDeleteMail}>
+        <div className="icon-btn">
           <TrashIcon className="h-5 z-30 hover:text-black" />
         </div>
       )}
