@@ -57,11 +57,3 @@ export const createReply = async (
     });
   }
 };
-
-export const deleteMail = async (id, files) => {
-  files?.map(
-    async (file) => await deleteDoc(doc(db, "emails", id, "files", file.id))
-  );
-
-  await deleteDoc(doc(db, "emails", id));
-};
