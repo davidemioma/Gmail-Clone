@@ -1,22 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import MailBody from "../../components/MailBody";
 import MailTop from "../../components/MailTop";
 import { BsFillReplyFill } from "react-icons/bs";
 import { GoArrowRight } from "react-icons/go";
-import { collection, doc, getDoc, getDocs } from "@firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+} from "@firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { db, auth } from "../../firebase";
 import MailFile from "../../components/MailFile";
 import TaskForm from "../../components/TaskForm";
 import Reply from "../../components/Reply";
+import { useRouter } from "next/router";
 
 const Mail = ({ email, files, replies }) => {
   const [user] = useAuthState(auth);
 
+  const router = useRouter();
+
   const [replyFormOpen, setReplyFormOpen] = useState(false);
 
   const [forwardFormOpen, setForwardFormOpen] = useState(false);
+
+  const [clientReplies, setClientReplies] = useState([]);
+
+  useEffect(
+    () =>
+      onSnapshot(
+        query(
+          collection(db, "emails", router.query.id, "replies"),
+          orderBy("timestamp", "asc")
+        ),
+        (snapshot) => setClientReplies(snapshot.docs)
+      ),
+    [db]
+  );
 
   return (
     <div className="overflow-y-scroll h-[90vh]">
@@ -57,11 +82,39 @@ const Mail = ({ email, files, replies }) => {
         </div>
       )}
 
-      <div className="border-t border-[whitesmoke]">
-        {replies?.map((reply) => (
-          <Reply key={reply.id} reply={reply} id={email?.id} />
-        ))}
-      </div>
+      {clientReplies ? (
+        <div className="border-t border-[whitesmoke]">
+          {clientReplies?.map((reply) => (
+            <Reply
+              key={reply.id}
+              id={email?.id}
+              replyId={reply.id}
+              profilePic={reply.data().profilePic}
+              username={reply.data().username}
+              sender={reply.data().sender}
+              message={reply.data().message}
+              to={reply.data().to}
+              timestamp={reply.data().timestamp.toDate().getTime()}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="border-t border-[whitesmoke]">
+          {replies?.map((reply) => (
+            <Reply
+              key={reply.id}
+              id={email?.id}
+              replyId={reply.id}
+              profilePic={reply.profilePic}
+              username={reply.username}
+              sender={reply.sender}
+              message={reply.message}
+              to={reply.to}
+              timestamp={reply.timestamp}
+            />
+          ))}
+        </div>
+      )}
 
       {replyFormOpen && (
         <TaskForm
@@ -121,7 +174,7 @@ export const getServerSideProps = async (context) => {
   const email = {
     id: emailRef.id,
     ...emailRef.data(),
-    timestamp: emailRef.data().timestamp.toDate().getTime(),
+    timestamp: emailRef?.data()?.timestamp?.toDate().getTime(),
   };
 
   const filesRef = await getDocs(
@@ -140,7 +193,7 @@ export const getServerSideProps = async (context) => {
   const replies = repliesRef.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-    timestamp: doc.data().timestamp.toDate().getTime(),
+    timestamp: doc?.data()?.timestamp?.toDate().getTime(),
   }));
 
   return {

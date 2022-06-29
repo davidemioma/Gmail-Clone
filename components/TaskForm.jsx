@@ -25,7 +25,9 @@ const TaskForm = ({
 }) => {
   const [user] = useAuthState(auth);
 
-  const [replyMail, setReplyMail] = useState([sender, reciver]);
+  const [replyMail, setReplyMail] = useState(
+    sender === reciver ? [sender] : [sender, reciver]
+  );
 
   const filePickerRef = useRef(null);
 
