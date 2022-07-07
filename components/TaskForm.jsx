@@ -208,14 +208,14 @@ const TaskForm = ({
                 className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md"
                 onClick={forwardMail}
               >
-                Send
+                Forward
               </button>
             ) : (
               <button
                 className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md"
                 onClick={sendReply}
               >
-                Send
+                Reply
               </button>
             )}
 
