@@ -48,7 +48,7 @@ const Reply = ({
 
           <div className="flex items-center">
             <p className="text-xs">
-              (<Moment fromNow date={timestamp.toDate()} />)
+              (<Moment fromNow date={timestamp?.toDate()} />)
             </p>
 
             <div className="hidden md:inline-flex">
