@@ -203,12 +203,21 @@ const TaskForm = ({
 
         <div className="flex items-center justify-between px-2 pt-1">
           <div className="flex items-center">
-            <button
-              className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md"
-              onClick={task === "reply" ? sendReply : forwardMail}
-            >
-              Send
-            </button>
+            {task === "forward" ? (
+              <button
+                className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md"
+                onClick={forwardMail}
+              >
+                Send
+              </button>
+            ) : (
+              <button
+                className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md"
+                onClick={sendReply}
+              >
+                Send
+              </button>
+            )}
 
             <BtnIcon
               onClick={() => filePickerRef.current.click()}
