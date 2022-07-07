@@ -43,7 +43,11 @@ const Form = () => {
   };
 
   const sendEmail = async () => {
-    if (!recipent.trim()) alert("Enter a valid recipient email");
+    if (!recipent.trim() || !recipent.includes("@gmail.com")) {
+      alert("Enter a valid recipient email");
+
+      return;
+    }
 
     const data = {
       to: recipent,

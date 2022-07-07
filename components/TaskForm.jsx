@@ -13,6 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { serverTimestamp } from "@firebase/firestore";
 import { createReply, createMail } from "../util/functions";
+import MailFile from "./MailFile";
 
 const TaskForm = ({
   id,
@@ -64,19 +65,17 @@ const TaskForm = ({
   const sendReply = async () => {
     if (replyMail.length === 0) return;
 
-    replyMail.map(async (mail) => {
-      const data = {
-        to: mail,
-        subject: subject || "",
-        message: newMessage || "",
-        username: user.displayName,
-        sender: user.email,
-        profilePic: user.photoURL,
-        timestamp: serverTimestamp(),
-      };
+    const data = {
+      to: replyMail.join(", "),
+      subject: subject || "",
+      message: newMessage || "",
+      username: user.displayName,
+      sender: user.email,
+      profilePic: user.photoURL,
+      timestamp: serverTimestamp(),
+    };
 
-      await createReply(id, data, seletedFiles, setSeletedFiles);
-    });
+    await createReply(id, data, seletedFiles, setSeletedFiles);
 
     setNewMessage("");
 
@@ -90,7 +89,7 @@ const TaskForm = ({
       const data = {
         to: mail,
         subject: subject || "",
-        message: message || "",
+        message: message,
         username: user.displayName,
         sender: user.email,
         profilePic: user.photoURL,

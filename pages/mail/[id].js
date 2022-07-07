@@ -94,7 +94,7 @@ const Mail = ({ email, files }) => {
               sender={reply.data().sender}
               message={reply.data().message}
               to={reply.data().to}
-              timestamp={reply.data().timestamp.toDate().getTime()}
+              timestamp={reply.data().timestamp}
             />
           ))}
         </div>
