@@ -20,7 +20,7 @@ import TaskForm from "../../components/TaskForm";
 import Reply from "../../components/Reply";
 import { useRouter } from "next/router";
 
-const Mail = ({ email, files, replies }) => {
+const Mail = ({ email, files }) => {
   const [user] = useAuthState(auth);
 
   const router = useRouter();
@@ -29,7 +29,7 @@ const Mail = ({ email, files, replies }) => {
 
   const [forwardFormOpen, setForwardFormOpen] = useState(false);
 
-  const [clientReplies, setClientReplies] = useState([]);
+  const [replies, setReplies] = useState([]);
 
   useEffect(
     () =>
@@ -38,7 +38,7 @@ const Mail = ({ email, files, replies }) => {
           collection(db, "emails", router.query.id, "replies"),
           orderBy("timestamp", "asc")
         ),
-        (snapshot) => setClientReplies(snapshot.docs)
+        (snapshot) => setReplies(snapshot.docs)
       ),
     [db]
   );
@@ -82,9 +82,9 @@ const Mail = ({ email, files, replies }) => {
         </div>
       )}
 
-      {clientReplies ? (
+      {replies && (
         <div className="border-t border-[whitesmoke]">
-          {clientReplies?.map((reply) => (
+          {replies?.map((reply) => (
             <Reply
               key={reply.id}
               id={email?.id}
@@ -95,22 +95,6 @@ const Mail = ({ email, files, replies }) => {
               message={reply.data().message}
               to={reply.data().to}
               timestamp={reply.data().timestamp.toDate().getTime()}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="border-t border-[whitesmoke]">
-          {replies?.map((reply) => (
-            <Reply
-              key={reply.id}
-              id={email?.id}
-              replyId={reply.id}
-              profilePic={reply.profilePic}
-              username={reply.username}
-              sender={reply.sender}
-              message={reply.message}
-              to={reply.to}
-              timestamp={reply.timestamp}
             />
           ))}
         </div>
@@ -186,21 +170,10 @@ export const getServerSideProps = async (context) => {
     ...doc.data(),
   }));
 
-  const repliesRef = await getDocs(
-    collection(db, "emails", context.query.id, "replies")
-  );
-
-  const replies = repliesRef.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-    timestamp: doc?.data()?.timestamp?.toDate().getTime(),
-  }));
-
   return {
     props: {
       email,
       files,
-      replies,
     },
   };
 };
